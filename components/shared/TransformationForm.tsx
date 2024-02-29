@@ -4,6 +4,15 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
+
+
 import { Button } from "@/components/ui/button"
 import {
     Form,
@@ -15,8 +24,9 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { defaultValues } from "@/constants"
+import { defaultValues, transformationTypes } from "@/constants"
 import { CustomField } from "./CustomField"
+import { useState } from "react"
 
 export const formSchema = z.object({
     title: z.string(),
@@ -27,7 +37,10 @@ export const formSchema = z.object({
 })
 
 
-const TransformationForm = ({ action, data = null }: TransformationFormProps) => {
+const TransformationForm = ({ action, data = null, userId, type, creditBalance }: TransformationFormProps) => {
+    const transformationType = transformationTypes[type];
+    const [image, setimage] = useState(data);
+    const [newTransformation, setnewTransformation] = useState<Transformations | null>(null);
     const initialValues = data && action === 'Update' ? {
         title: data?.title,
         aspectRatio: data?.aspectRatio,
@@ -47,16 +60,42 @@ const TransformationForm = ({ action, data = null }: TransformationFormProps) =>
         // ✅ This will be type-safe and validated.
         console.log(values)
     }
+
+    const onSelectFieldHandler = (value: string, onChangeField: (value : string) => void) => {
+
+    }
+
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                <CustomField 
+                <CustomField
                     control={form.control}
                     name="title"
                     formLabel="Image Title"
                     className="w-full"
-                    render={({ field }) => <Input {...field} className="input-field"/>}
+                    render={({ field }) => <Input {...field} className="input-field" />}
                 />
+                {type === 'fill' && (
+                    <CustomField
+                        control={form.control}
+                        name="aspectRatio"
+                        formLabel="Aspect Ratio"
+                        className="w-full"
+                        render={({ field }) => (
+                            <Select>
+                                <SelectTrigger className="w-[180px]">
+                                    <SelectValue placeholder="Theme" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="light">Light</SelectItem>
+                                    <SelectItem value="dark">Dark</SelectItem>
+                                    <SelectItem value="system">System</SelectItem>
+                                </SelectContent>
+                            </Select>
+
+                        )}
+                    />
+                )}
             </form>
         </Form>
     )
