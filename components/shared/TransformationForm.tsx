@@ -89,7 +89,7 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance }
                                 }
                             >
                                 <SelectTrigger className="select-field">
-                                    <SelectValue placeholder="Aspect Ratio" />
+                                    <SelectValue placeholder="Select Size" />
                                 </SelectTrigger>
                                 <SelectContent>
                                     {Object.keys(aspectRatioOptions).map((key) => (
